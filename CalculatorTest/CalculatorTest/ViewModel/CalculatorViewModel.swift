@@ -61,4 +61,11 @@ class CalculatorViewModel: ObservableObject {
         // 演算子をクリア
         self.selectedOperation = nil
     }
+    // クリアボタン押下時の処理
+    func reset() {
+        display = "0"
+        currentNumber = 0
+        previousNumber = 0
+        selectedOperation = nil
+    }
 }

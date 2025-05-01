@@ -57,6 +57,9 @@ struct CalculatorView: View {
             // =をタップしたら計算結果を表示
         case "=":
             viewModel.calculateResult()
+            // クリアボタンタップでリセット
+        case "C":
+            viewModel.reset()
             // 処理せずswitch文を抜ける
         default:
             break
