@@ -10,6 +10,9 @@ import Foundation
 class CalculatorViewModel: ObservableObject {
     // 画面に表示される文字
     @Published var display: String = "0"
+    // 演算子押下後の小数点入力が正しく反映されなかったため、演算子入力後の最初の入力を判定するフラグを作成
+    // true = 「これから新しい数字を入れますモード」 false = 「いま入力してる数字にくっつけるモード」
+    private var isEnteringNewNumber: Bool = true
     // 入力中の数字。private(set): クラスの外からは読み取りだけOK、書き換えはこのクラスの中だけOK
     private(set) var currentNumber: Double = 0.0
     // 入力直前の数字
@@ -19,8 +22,8 @@ class CalculatorViewModel: ObservableObject {
     
     // 数字ボタンタップ時、画面に数字を足していく処理
     func inputNumber(_ input: String) {
-        // 現在の値が0、もしくは演算子を押下後に数字未入力の状態の時
-        if display == "0" || (selectedOperation != nil && currentNumber == 0) {
+        // 新しく入力を始めるとき
+        if isEnteringNewNumber {
             // 0の後に小数点を入力できるようにする
             if input == "." {
                 display = "0."
@@ -28,6 +31,8 @@ class CalculatorViewModel: ObservableObject {
                 // 普通の数字入力
                 display = input
             }
+            // 上書き後はいま入力してる数字にくっつけるモード
+            isEnteringNewNumber = false
         } else {
             // すでに数字が入力されているとき
             // 小数点がすでに含まれていたら、さらに小数点を入れないように制御
@@ -46,8 +51,8 @@ class CalculatorViewModel: ObservableObject {
         selectedOperation = opreation
         // 入力してた数字を保存
         previousNumber = currentNumber
-        // 演算子押下後は数字をリセット
-        currentNumber = 0
+        // 演算子押下後にこれから新しい数字を入れますモード
+        isEnteringNewNumber = true
     }
     // 計算処理結果
     func calculateResult() {
@@ -70,6 +75,8 @@ class CalculatorViewModel: ObservableObject {
         display = formatResult(currentNumber)
         // 演算子をクリア
         self.selectedOperation = nil
+        // これから新しい数字を入れますモード
+        isEnteringNewNumber = true
     }
     // クリアボタン押下時の処理
     func reset() {
@@ -77,6 +84,7 @@ class CalculatorViewModel: ObservableObject {
         currentNumber = 0
         previousNumber = 0
         selectedOperation = nil
+        isEnteringNewNumber = true
     }
     // 末尾の数値を削除する
     func deleteLastCharacter() {
