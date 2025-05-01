@@ -21,9 +21,19 @@ class CalculatorViewModel: ObservableObject {
     func inputNumber(_ input: String) {
         // 現在の値が0、もしくは演算子を押下後に数字未入力の状態の時
         if display == "0" || (selectedOperation != nil && currentNumber == 0) {
-            // 入力した数字を上書き
-            display = input
+            // 0の後に小数点を入力できるようにする
+            if input == "." {
+                display = "0."
+            } else {
+                // 普通の数字入力
+                display = input
+            }
         } else {
+            // すでに数字が入力されているとき
+            // 小数点がすでに含まれていたら、さらに小数点を入れないように制御
+            if input == "." && display.contains(".") {
+                return
+            }
             // 数字を入力後は表示してる文字列に新しい文字をくっつける
             display += input
         }
