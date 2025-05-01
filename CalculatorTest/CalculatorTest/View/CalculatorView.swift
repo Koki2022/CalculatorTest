@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CalculatorView: View {
+    @StateObject private var viewModel = CalculatorViewModel()
     // ボタンのレイアウトを定義
     private let buttons: [[String]] = [
         ["7", "8", "9", "/"],
@@ -20,7 +21,7 @@ struct CalculatorView: View {
     var body: some View {
         VStack(spacing: 10) {
             // 計算結果を表示
-            Text("0")
+            Text(viewModel.display)
                 .font(.largeTitle)
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .padding()
@@ -31,7 +32,7 @@ struct CalculatorView: View {
             HStack(spacing: 10) {
                 ForEach(row, id: \.self) { button in
                     Button(action: {
-                        
+                        buttonTapped(button)
                     }) {
                         Text(button)
                             .font(.title)
@@ -44,7 +45,23 @@ struct CalculatorView: View {
             }
         }
     }
-    //
+    // ボタンタップ時の処理
+    private func buttonTapped(_ button: String) {
+        switch button {
+            // 数字ボタンか.ボタンタップ時、文字列追加
+        case "0"..."9", ".":
+            viewModel.inputNumber(button)
+            // 演算子タップ時の処理
+        case "+", "-", "*", "/":
+            viewModel.setOperation(button)
+            // =をタップしたら計算結果を表示
+        case "=":
+            viewModel.calculateResult()
+            // 処理せずswitch文を抜ける
+        default:
+            break
+        }
+    }
 }
 
 #Preview {

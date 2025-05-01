@@ -1,0 +1,64 @@
+//
+//  CalculatorViewModel.swift
+//  CalculatorTest
+//
+//  Created by 高橋昴希 on 2025/05/01.
+//
+
+import Foundation
+
+class CalculatorViewModel: ObservableObject {
+    // 画面に表示される文字
+    @Published var display: String = "0"
+    // 入力中の数字。private(set): クラスの外からは読み取りだけOK、書き換えはこのクラスの中だけOK
+    private(set) var currentNumber: Double = 0.0
+    // 入力直前の数字
+    private(set) var previousNumber: Double = 0.0
+    // 選択した演算子
+    private(set) var selectedOperation: String? = nil
+    
+    // 数字ボタンタップ時、画面に数字を足していく処理
+    func inputNumber(_ input: String) {
+        // 現在の値が0、もしくは演算子を押下後に数字未入力の状態の時
+        if display == "0" || (selectedOperation != nil && currentNumber == 0) {
+            // 入力した数字を上書き
+            display = input
+        } else {
+            // 数字を入力後は表示してる文字列に新しい文字をくっつける
+            display += input
+        }
+        // 入力した文字を数値に変換
+        currentNumber = Double(display) ?? 0
+    }
+    // 演算子タップ時の処理
+    func setOperation(_ opreation: String) {
+        // 演算子セット
+        selectedOperation = opreation
+        // 入力してた数字を保存
+        previousNumber = currentNumber
+        // 演算子押下後は数字をリセット
+        currentNumber = 0
+    }
+    // 計算処理結果
+    func calculateResult() {
+        // 演算子がセットされているかチェック
+        guard let selectedOperation = selectedOperation else { return }
+        // 演算子毎の処理
+        switch selectedOperation {
+        case "+":
+            currentNumber = previousNumber + currentNumber
+        case "-":
+            currentNumber = previousNumber - currentNumber
+        case "*":
+            currentNumber = previousNumber * currentNumber
+        case "/":
+            currentNumber = previousNumber / currentNumber
+        default:
+            break
+        }
+        // 計算結果表示
+        display = String(currentNumber)
+        // 演算子をクリア
+        self.selectedOperation = nil
+    }
+}
