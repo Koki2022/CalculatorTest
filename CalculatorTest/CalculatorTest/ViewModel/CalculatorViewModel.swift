@@ -57,7 +57,7 @@ class CalculatorViewModel: ObservableObject {
             break
         }
         // 計算結果表示
-        display = String(currentNumber)
+        display = formatResult(currentNumber)
         // 演算子をクリア
         self.selectedOperation = nil
     }
@@ -67,5 +67,25 @@ class CalculatorViewModel: ObservableObject {
         currentNumber = 0
         previousNumber = 0
         selectedOperation = nil
+    }
+    // 末尾の数値を削除する
+    func deleteLastCharacter() {
+        // 文字が1文字以下なら削除したときに0を表示する
+        guard display.count > 1 else {
+            display = "0"
+            currentNumber = 0
+            return
+        }
+        // 末尾削除
+        display.removeLast()
+        // 削除後の数値を入力中の数字に代入
+        currentNumber = Double(display) ?? 0
+    }
+    // 計算結果を整形する(小数点以下が0なら小数点なしで出力)
+    private func formatResult(_ value: Double)  -> String {
+        // value を1で割った余りを見ることで、「小数点以下がゼロか」をチェック
+        return value.truncatingRemainder(dividingBy: 1) == 0 ?
+        // valueが整数なら小数点なしで表示 "%.0f":「浮動小数を0桁 = 小数点以下を表示しない」
+        String(format: "%.0f", value) : String(value)
     }
 }

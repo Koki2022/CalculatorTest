@@ -60,6 +60,9 @@ struct CalculatorView: View {
             // クリアボタンタップでリセット
         case "C":
             viewModel.reset()
+            // ⌫で削除
+        case "⌫":
+            viewModel.deleteLastCharacter()
             // 処理せずswitch文を抜ける
         default:
             break
