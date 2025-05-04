@@ -23,20 +23,15 @@ final class CalculatorTestTests: XCTestCase {
         // インスタンスを破棄
         viewModel = nil
     }
-    
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-    
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    // 数字入力と小数点入力のテスト
+    func testInputNumber() throws {
+        // 画面表示が "1" になることを確認
+        viewModel.inputNumber("1")
+        XCTAssertEqual(viewModel.display, "1")
+        // 画面表示が "1.5" になることを確認
+        viewModel.inputNumber(".")
+        viewModel.inputNumber("5")
+        XCTAssertEqual(viewModel.display, "1.5")
     }
     
 }
