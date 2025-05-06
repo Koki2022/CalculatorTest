@@ -41,4 +41,10 @@ final class CalculatorTestTests: XCTestCase {
         viewModel.calculateResult()
         XCTAssertEqual(viewModel.display, "5")
     }
+    // リセットボタンテスト
+    func testReset() throws {
+        viewModel.inputNumber("3")
+        viewModel.reset()
+        XCTAssertEqual(viewModel.display, "0")
+    }
 }
