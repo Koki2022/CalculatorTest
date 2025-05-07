@@ -47,4 +47,17 @@ final class CalculatorTestTests: XCTestCase {
         viewModel.reset()
         XCTAssertEqual(viewModel.display, "0")
     }
+    // 末尾削除（⌫ボタン）のテスト
+    func testDeleteLastCharacter() throws {
+        // まずは4と入力
+        viewModel.inputNumber("4")
+        // 次に5を入力
+        viewModel.inputNumber("5")
+        // 1文字消すと4が残るか確認
+        viewModel.deleteLastCharacter()
+        XCTAssertEqual(viewModel.display, "4")
+        // もう1文字消すと値がなくなり0と表示
+        viewModel.deleteLastCharacter()
+        XCTAssertEqual(viewModel.display, "0")
+    }
 }
